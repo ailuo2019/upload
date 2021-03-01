@@ -7,7 +7,7 @@ import (
 
 	"github.com/cirocosta/gupload/core"
 	"golang.org/x/net/context"
-	"gopkg.in/urfave/cli.v2"
+	"github.com/urfave/cli/v2"
 )
 
 var Upload = cli.Command{

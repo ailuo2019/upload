@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/cirocosta/gupload/cmd"
-	"gopkg.in/urfave/cli.v2"
+	"github.com/urfave/cli/v2"
 )
 
 func main() {

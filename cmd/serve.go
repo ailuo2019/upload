@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/cirocosta/gupload/core"
-	"gopkg.in/urfave/cli.v2"
+	"github.com/urfave/cli/v2"
 )
 
 var Serve = cli.Command{
