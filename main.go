@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/cirocosta/gupload/cmd"
+	"github.com/ailuo2019/upload/cmd"
 	"github.com/urfave/cli/v2"
 )
 

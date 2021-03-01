@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/cirocosta/gupload/core"
+	"github.com/ailuo2019/upload/core"
 	"golang.org/x/net/context"
 	"github.com/urfave/cli/v2"
 )

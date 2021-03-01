@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/cirocosta/gupload/messaging"
+	"github.com/ailuo2019/upload/messaging"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"golang.org/x/net/context"

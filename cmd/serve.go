@@ -3,7 +3,7 @@ package cmd
 import (
 	"errors"
 
-	"github.com/cirocosta/gupload/core"
+	"github.com/ailuo2019/upload/core"
 	"github.com/urfave/cli/v2"
 )
 
