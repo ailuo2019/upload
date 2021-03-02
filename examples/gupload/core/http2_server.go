@@ -79,6 +79,7 @@ func (s *ServerH2) Upload(w http.ResponseWriter, r *http.Request) {
 	)
 
 	bytesReceived, err = io.Copy(buf, r.Body)
+	fmt.Printf("received %s.\n", buf)
 	if err != nil {
 		s.logger.Error().
 			Err(err).

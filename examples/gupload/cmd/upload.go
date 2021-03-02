@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/ailuo2019/upload/core"
-	"golang.org/x/net/context"
 	"github.com/urfave/cli/v2"
+	"golang.org/x/net/context"
 )
 
 var Upload = cli.Command{
