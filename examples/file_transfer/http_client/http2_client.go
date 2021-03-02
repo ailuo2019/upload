@@ -150,7 +150,7 @@ func main() {
 	stat, err := http2Client.UploadFile(context.Background(), file)
 	must(err)
 	defer http2Client.Close()
-	fmt.Printf("%d\n", stat.FinishedAt.Sub(stat.StartedAt).Nanoseconds())
+	fmt.Printf("http2 upload file time %d ns\n", stat.FinishedAt.Sub(stat.StartedAt).Nanoseconds())
 
 	return
 }
