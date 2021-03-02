@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"flag"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -65,7 +67,7 @@ func NewServerH2(cfg ServerH2Config) (s ServerH2, err error) {
 	s.key = cfg.Key
 
 	http2.ConfigureServer(s.server, nil)
-	http.HandleFunc("/upload", s.Upload)
+	http.HandleFunc("/upload/", s.Upload)
 
 	return
 }
@@ -89,7 +91,9 @@ func (s *ServerH2) Upload(w http.ResponseWriter, r *http.Request) {
 	)
 
 	bytesReceived, err = io.Copy(buf, r.Body)
-	fmt.Printf("received %s.\n", buf)
+	subStr := strings.Split(r.URL.Path, "/")
+	fileName := subStr[len(subStr)-1]
+	err = ioutil.WriteFile("./" + fileName,buf.Bytes(), 0666)
 	if err != nil {
 		s.logger.Error().
 			Err(err).

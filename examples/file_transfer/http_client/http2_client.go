@@ -95,8 +95,9 @@ func (c *ClientH2) UploadFile(ctx context.Context, f string) (stats Stats, err e
 		return
 	}
 	defer file.Close()
-
-	req, err := http.NewRequest("POST", c.address+"/upload", file)
+	subStr := strings.Split(f, "/")
+	fileName := subStr[len(subStr)-1]
+	req, err := http.NewRequest("POST", c.address+"/upload/" + fileName, file)
 	if err != nil {
 		err = errors.Wrapf(err,
 			"failed to create POST request")
