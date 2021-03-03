@@ -25,6 +25,7 @@ type ServerGRPC struct {
 	port        int
 	certificate string
 	key         string
+	SaveDir     string
 }
 
 func must(err error) {
@@ -39,6 +40,7 @@ func must(err error) {
 type ServerGRPCConfig struct {
 	Certificate string
 	Key         string
+	SaveDir     string
 	Port        int
 }
 
@@ -56,6 +58,7 @@ func NewServerGRPC(cfg ServerGRPCConfig) (s ServerGRPC, err error) {
 	s.port = cfg.Port
 	s.certificate = cfg.Certificate
 	s.key = cfg.Key
+	s.SaveDir = cfg.SaveDir
 
 	return
 }
@@ -101,8 +104,12 @@ func (s *ServerGRPC) Listen() (err error) {
 }
 
 func (s *ServerGRPC) Upload(stream messaging.GuploadService_UploadServer) (err error) {
+	req, err := stream.Recv()
+	fileName := req.GetFileName()
+	outputFile, err1 := os.Create(s.SaveDir+fileName)
+	must(err1)
+	defer outputFile.Close()
 	for {
-		_, err = stream.Recv()
 		if err != nil {
 			if err == io.EOF {
 				goto END
@@ -112,10 +119,15 @@ func (s *ServerGRPC) Upload(stream messaging.GuploadService_UploadServer) (err e
 				"failed unexpectadely while reading chunks from stream")
 			return
 		}
+		chunk := req.GetContent()
+		_, err1 := outputFile.Write(chunk)
+		must(err1)
+		req, err = stream.Recv()
 	}
 
 END:
-	s.logger.Info().Msg("upload received")
+	outputFile.Sync()
+	fmt.Printf("file %s is uploaded\n", s.SaveDir+fileName)
 	err = stream.SendAndClose(&messaging.UploadStatus{
 		Message: "Upload received with success",
 		Code:    messaging.UploadStatusCode_Ok,
@@ -144,13 +156,14 @@ func main() {
 	keyPtr := flag.String("key", "", "path to TLS certificate")
 	//example of default certificate: ./certs/localhost.cert
 	certPtr := flag.String("certificate", "", "path to TLS certificate")
-
+	saveDirPtr := flag.String("dir", "./", "path to save the uploaded files")
 	flag.Parse()
 
 	ServerCfg := ServerGRPCConfig{}
 	ServerCfg.Port = *portPtr;
 	ServerCfg.Certificate = *certPtr
 	ServerCfg.Key = *keyPtr
+	ServerCfg.SaveDir = *saveDirPtr
 
 	grpcServer, err := NewServerGRPC(ServerCfg)
 	must(err)		

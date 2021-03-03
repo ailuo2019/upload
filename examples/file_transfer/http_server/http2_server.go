@@ -21,12 +21,15 @@ type ServerH2 struct {
 	logger      zerolog.Logger
 	certificate string
 	key         string
+	SaveDir     string
 }
 
 type ServerH2Config struct {
 	Port        int
 	Certificate string
 	Key         string
+	SaveDir     string
+
 }
 
 func must(err error) {
@@ -65,6 +68,7 @@ func NewServerH2(cfg ServerH2Config) (s ServerH2, err error) {
 
 	s.certificate = cfg.Certificate
 	s.key = cfg.Key
+	s.SaveDir = cfg.SaveDir
 
 	http2.ConfigureServer(s.server, nil)
 	http.HandleFunc("/upload/", s.Upload)
@@ -93,7 +97,7 @@ func (s *ServerH2) Upload(w http.ResponseWriter, r *http.Request) {
 	bytesReceived, err = io.Copy(buf, r.Body)
 	subStr := strings.Split(r.URL.Path, "/")
 	fileName := subStr[len(subStr)-1]
-	err = ioutil.WriteFile("./" + fileName,buf.Bytes(), 0666)
+	err = ioutil.WriteFile(s.SaveDir + fileName,buf.Bytes(), 0666)
 	if err != nil {
 		s.logger.Error().
 			Err(err).
@@ -107,6 +111,8 @@ func (s *ServerH2) Upload(w http.ResponseWriter, r *http.Request) {
 	// just receives the content and prints to stdout
 	// read the body.
 
+
+	fmt.Printf("file %s is uploaded\n", s.SaveDir+fileName)
 	s.logger.Info().
 		Int64("bytes_received", bytesReceived).
 		Msg("upload received")
@@ -123,6 +129,7 @@ func main() {
 	portPtr := flag.Int("port", 1313, "port to bind to")
 	keyPtr := flag.String("key", "./certs/localhost.key", "path to TLS certificate")
 	certPtr := flag.String("certificate", "./certs/localhost.cert", "path to TLS certificate")
+	saveDirPtr := flag.String("dir", "./", "path to save the uploaded files")
 
 	flag.Parse()
 
@@ -130,7 +137,8 @@ func main() {
 	ServerCfg.Port = *portPtr;
 	ServerCfg.Certificate = *certPtr
 	ServerCfg.Key = *keyPtr
-
+	ServerCfg.SaveDir = *saveDirPtr
+	
 	http2Server, err := NewServerH2(ServerCfg)
 	must(err)		
 	err = http2Server.Listen()
