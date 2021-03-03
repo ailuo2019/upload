@@ -152,18 +152,18 @@ func (s *ServerGRPC) Close() {
 func main() {
 
 	portPtr := flag.Int("port", 1313, "port to bind to")
-	//example of default key: ./certs/localhost.key	
-	keyPtr := flag.String("key", "", "path to TLS certificate")
-	//example of default certificate: ./certs/localhost.cert
-	certPtr := flag.String("certificate", "", "path to TLS certificate")
+	//example of default key: ./certs/selfsigned.key	
+	//keyPtr := flag.String("key", "", "path to TLS certificate")
+	//example of default certificate: ./certs/selfsigned.cert
+	//certPtr := flag.String("certificate", "", "path to TLS certificate")
 	saveDirPtr := flag.String("dir", "./", "path to save the uploaded files")
 	flag.Parse()
 
 	ServerCfg := ServerGRPCConfig{}
 	ServerCfg.Port = *portPtr;
-	ServerCfg.Certificate = *certPtr
-	ServerCfg.Key = *keyPtr
 	ServerCfg.SaveDir = *saveDirPtr
+	//ServerCfg.Certificate = *certPtr
+	//ServerCfg.Key = *keyPtr
 
 	grpcServer, err := NewServerGRPC(ServerCfg)
 	must(err)		

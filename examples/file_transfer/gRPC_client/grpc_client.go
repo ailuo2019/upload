@@ -194,22 +194,22 @@ func main() {
 
 	chunkSizePtr := flag.Int("chunk-size", (1<<12), "size of the chunk messages")
 	addressPtr := flag.String("address", "localhost:1313", "path to TLS certificate")
-	//example of default certificate: ./certs/localhost.cert
-	certPtr := flag.String("certificate", "", "path of a certificate to add to the root CAs")
 	filePtr := flag.String("file", "", "file to upload")
-	compressPtr := flag.Bool("compress", false, "whether or not to enable payload compression")
+	//example of default certificate: ./certs/selfsigned.cert
+	//certPtr := flag.String("certificate", "", "path of a certificate to add to the root CAs")
+	//compressPtr := flag.Bool("compress", false, "whether or not to enable payload compression")
 
 	flag.Parse()
 	cfg := ClientGRPCConfig{}
 
 	cfg.Address = *addressPtr
 	cfg.ChunkSize = *chunkSizePtr
-	cfg.RootCertificate = *certPtr
-	cfg.Compress = *compressPtr
 	file := *filePtr
 	if file == "" {
 		must(errors.New("file must be set"))
 	}
+	//cfg.RootCertificate = *certPtr
+	//cfg.Compress = *compressPtr
 
 	grpcClient, err := NewClientGRPC(cfg)
 	must(err)		

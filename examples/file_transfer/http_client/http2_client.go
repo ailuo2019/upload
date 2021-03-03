@@ -128,7 +128,7 @@ func (c *ClientH2) Close() {
 
 func main() {
 	addressPtr := flag.String("address", "localhost:1313", "address of the server to connect to")
-	certPtr := flag.String("root-certificate", "./certs/localhost.cert", "path to TLS certificate")
+	certPtr := flag.String("certificate", "./certs/selfsigned.cert", "path to TLS certificate")
 	filePtr := flag.String("file", "", "file to upload")
 
 	flag.Parse()

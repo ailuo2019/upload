@@ -127,8 +127,8 @@ func (s *ServerH2) Close() {
 func main() {
 
 	portPtr := flag.Int("port", 1313, "port to bind to")
-	keyPtr := flag.String("key", "./certs/localhost.key", "path to TLS certificate")
-	certPtr := flag.String("certificate", "./certs/localhost.cert", "path to TLS certificate")
+	keyPtr := flag.String("key", "./certs/selfsigned.key", "path to TLS certificate")
+	certPtr := flag.String("certificate", "./certs/selfsigned.cert", "path to TLS certificate")
 	saveDirPtr := flag.String("dir", "./", "path to save the uploaded files")
 
 	flag.Parse()
